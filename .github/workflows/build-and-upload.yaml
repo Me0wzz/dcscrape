@@ -1,0 +1,26 @@
+name: Build and Upload Docker Image
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Build image
+        run: |
+          docker build -t dcscrape:latest .
+
+      - name: Save Docker image as tar
+        run: docker save dcscrape:latest > dcscrape.tar
+
+      - name: Upload image as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: DockerImage
+          path: dcscrape.tar
